@@ -22,22 +22,18 @@ jobs:
       - name: publish artifacts
         uses: Kir-Antipov/mc-publish@v3.1
         with:
-          modrinth-id: rI0hvYcd
+          modrinth-id: z13R7Et1
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files-primary: build/libs/!(*-@(dev|sources)).jar
-          files-secondary: build/libs/*-@(dev|sources).jar
 
-          version-type: beta
+          version-type: release
           loaders: |
-            fabric
-            quilt
+            forge
           game-versions: |
             1.19
             1.19.1
-          dependencies: |
-            fabric-api | depends | *
-            cloth-config | depends | *
+            1.19.2
 
           java: |
             17

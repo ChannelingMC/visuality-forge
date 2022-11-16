@@ -22,7 +22,7 @@ jobs:
       - name: publish artifacts
         uses: Kir-Antipov/mc-publish@v3.1
         with:
-          curseforge-id: 521126
+          curseforge-id: 704256
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           files-primary: build/libs/!(*-@(dev|sources)).jar
@@ -30,14 +30,12 @@ jobs:
 
           version-type: beta
           loaders: |
-            fabric
-            quilt
+            forge
           game-versions: |
             1.19
             1.19.1
-          dependencies: |
-            fabric-api | depends | *
-            cloth-config | depends | *
+            1.19.2
+            1.19.3
 
           java: |
             17
