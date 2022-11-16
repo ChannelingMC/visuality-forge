@@ -19,7 +19,7 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build artifacts
         run: ./gradlew build
-      - name: publish artifacts
+      - name: Publish artifacts
         uses: Kir-Antipov/mc-publish@v3.1
         with:
           curseforge-id: 704256
@@ -27,12 +27,13 @@ jobs:
 
           files-primary: build/libs/!(*-@(dev|sources)).jar
 
-          version-type: beta
+          version-type: release
+          changelog-file: CHANGELOG.md
+
           loaders: |
             forge
           game-versions: |
             1.18.2
-
           java: |
             17
 
