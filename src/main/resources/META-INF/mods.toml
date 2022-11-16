@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/ChannelingMC/visuality-forge/issues/"
 [[mods]]
     modId="visuality"
     version="${version}"
-    displayName="Visuality"
+    displayName="Visuality: Reforged"
     #updateJSONURL="https://change.me.example.invalid/updates.json"
     displayURL="https://www.curseforge.com/minecraft/mc-mods/visuality-forge"
     logoFile="pack.png"
