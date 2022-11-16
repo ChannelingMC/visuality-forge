@@ -1,13 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "visuality.mixin",
+  "refmap": "visuality.refmap.json",
+  "package": "com.github.channelingmc.visuality.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "AmethystClusterMixin",
-    "CreeperEntityMixin",
+    "AmethystClusterBlockMixin",
+    "CreeperMixin",
     "LivingEntityMixin",
-    "SlimeEntityMixin",
+    "SlimeMixin",
     "BlockMixin"
   ],
   "injectors": {

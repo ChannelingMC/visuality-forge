@@ -1,62 +1,149 @@
 plugins {
-	id "fabric-loom" version "0.12-SNAPSHOT"
-	id "io.github.juuxel.loom-quiltflower" version "1.7.3"
-	id "io.github.p03w.machete" version "1.1.2"
+    id 'idea'
+    id 'net.minecraftforge.gradle'
+    id 'org.spongepowered.mixin'
+    id 'org.parchmentmc.librarian.forgegradle'
+    id 'maven-publish'
 }
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
+archivesBaseName = project.mod_name
+version = project.mod_version + "+" + project.version_meta
 group = project.maven_group
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+
+        client {
+            workingDirectory project.file('run')
+
+            arg "-mixin.config=${project.mod_id}.mixins.json"
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', project.mod_id
+
+            mods {
+                "${project.mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+
+            workingDirectory project.file('run')
+
+            arg "-mixin.config=${project.mod_id}.mixins.json"
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', project.mod_id
+
+            mods {
+                "${project.mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', project.mod_id,
+                '--all', '--output', file('src/generated/resources/'),
+                '--existing', file('src/main/resources/')
+
+            mods {
+                "${project.mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+    }
+}
+
 repositories {
-	maven {
-		url "https://api.modrinth.com/maven"
-		content { includeGroup "maven.modrinth" }
-	}
-	maven { url "https://maven.terraformersmc.com" } //modmenu
-	maven { url "https://maven.shedaniel.me" } //cloth-config
-	maven { url "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered() {
-		officialMojangMappings()
-	}
-	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api}"
-	modImplementation "com.terraformersmc:modmenu:4.0.5"
-	modImplementation("me.shedaniel.cloth:cloth-config-fabric:7.0.73") {
-		exclude(group: "net.fabricmc.fabric-api")
-		exclude(group: "com.terraformersmc")
-	}
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-	modLocalRuntime "maven.modrinth:lazydfu:0.1.3"
-	modLocalRuntime "maven.modrinth:ferrite-core:5.0.0-fabric"
-	modLocalRuntime "maven.modrinth:starlight:1.1.1+1.19"
-	modLocalRuntime "me.djtheredstoner:DevAuth-fabric:1.0.0"
+    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 }
 
-processResources {
-	inputs.property "version", project.mod_version
-	filesMatching("fabric.mod.json") {
-		expand "version": project.mod_version
-	}
-}
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 17
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+
+    debug.verbose = true
+    debug.export = true
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-	withSourcesJar()
+    withSourcesJar()
+}
+
+processResources {
+    inputs.property "version", project.mod_version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.mod_version
+    }
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}" }
-	}
+    from(["LICENSE_FABRIC","LICENSE_FORGE"]) {
+        rename {
+            "${it}_" + project.archivesBaseName.toUpperCase(Locale.ROOT)
+        }
+    }
+    manifest {
+        attributes([
+            "Specification-Title"     : "${mod_name}",
+            "Specification-Vendor"    : "PinkGoosik",
+            "Specification-Version"   : "${mod_version}",
+            "Implementation-Title"    : "${mod_id}-forge",
+            "Implementation-Version"  : project.version_meta,
+            "Implementation-Vendor"   : "LimonBlaze",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs"            : "${mod_id}.mixins.json"
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
+            fg.component(it)
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 17
 }

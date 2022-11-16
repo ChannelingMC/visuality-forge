@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[41,)"
+license="LGPLv3"
+issueTrackerURL="https://github.com/ChannelingMC/visuality-forge/issues/"
+
+[[mods]]
+    modId="visuality"
+    version="${version}"
+    displayName="Visuality"
+    #updateJSONURL="https://change.me.example.invalid/updates.json"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/visuality-forge"
+    logoFile="pack.png"
+    credits="Thanks PinkGoosik for the original work!"
+    authors="LimonBlaze"
+    description="Little visual improvements by adding a bunch of new particles."
+
+[[dependencies.visuality]]
+    modId="forge"
+    mandatory=true
+    versionRange="[41,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.visuality]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19,1.20)"
+    ordering="NONE"
+    side="BOTH"
