@@ -2,7 +2,6 @@ package com.github.channelingmc.visuality.mixin;
 
 import com.github.channelingmc.visuality.registry.VisualityParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.FluidState;
@@ -12,13 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
+
 import static com.github.channelingmc.visuality.config.VisualityConfig.*;
 
 @Mixin(WaterFluid.class)
 public class WaterFluidMixin {
     
     @Inject(method = "animateTick", at = @At(value = "HEAD"))
-    private void animateTick$addWaterCircles(Level level, BlockPos pos, FluidState state, RandomSource random, CallbackInfo ci) {
+    private void animateTick$addWaterCircles(Level level, BlockPos pos, FluidState state, Random random, CallbackInfo ci) {
         if (!WATER_CIRCLE_ENABLED.get())
             return;
         int density = WATER_CIRCLE_DENSITY.get();

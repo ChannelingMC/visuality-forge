@@ -5,7 +5,6 @@ import com.github.channelingmc.visuality.registry.VisualityParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -16,6 +15,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Random;
 
 @Mixin(Block.class)
 public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
@@ -37,7 +38,7 @@ public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
     }
 
     @Inject(method = "animateTick", at = @At("TAIL"))
-    void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    void animateTick(BlockState state, Level level, BlockPos pos, Random random, CallbackInfo ci) {
         if (VisualityConfig.SOUL_ENABLED.get() &&
             state.is(BlockTags.WITHER_SUMMON_BASE_BLOCKS) &&
             level.getBlockState(pos.above()).isAir() &&

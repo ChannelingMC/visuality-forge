@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,6 +24,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Random;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class EntityParticleEventHandler {
     
@@ -37,7 +38,7 @@ public class EntityParticleEventHandler {
     
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void hit(LivingAttackEvent event) {
-        LivingEntity entity = event.getEntity();
+        LivingEntity entity = event.getEntityLiving();
         DamageSource source = event.getSource();
         float amount = event.getAmount();
         if (VisualityConfig.HIT_PARTICLES_ENABLED.get() &&
@@ -49,7 +50,7 @@ public class EntityParticleEventHandler {
         {
             ParticleOptions particle = VisualityConfig.HIT_PARTICLE_REGISTRY.get(entity.getType());
             if (particle != null) {
-                RandomSource random = entity.getRandom();
+                Random random = entity.getRandom();
                 int count = Mth.ceil(Math.min(entity.getHealth(), amount) / 2);
                 float height = entity.getBbHeight();
                 for(int i = 0; i <= count; i++) {
@@ -65,10 +66,10 @@ public class EntityParticleEventHandler {
     }
     
     @SubscribeEvent
-    public static void armorSparkle(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void armorSparkle(LivingEvent.LivingUpdateEvent event) {
+        LivingEntity entity = event.getEntityLiving();
         Level level = entity.level;
-        RandomSource random = entity.getRandom();
+        Random random = entity.getRandom();
         if (!level.isClientSide ||
             !VisualityConfig.SHINY_ARMOR_ENABLED.get() ||
             random.nextInt(32) != 0 ||
@@ -106,10 +107,10 @@ public class EntityParticleEventHandler {
     }
     
     @SubscribeEvent
-    public static void charge(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void charge(LivingEvent.LivingUpdateEvent event) {
+        LivingEntity entity = event.getEntityLiving();
         Level level = entity.getLevel();
-        RandomSource random = entity.getRandom();
+        Random random = entity.getRandom();
         if (level.isClientSide &&
             random.nextInt(20) == 0 &&
             entity instanceof PowerableMob powerable &&

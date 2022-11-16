@@ -92,7 +92,7 @@ public class VisualityConfig {
 				String[] pair = entry.replace(" ", "").split("=");
 				if (pair.length != 2)
 					throw new RuntimeException("Unexpected input for format: \"key = value\"");
-				EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(pair[0]));
+				EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(pair[0]));
 				if (entityType == null)
 					throw new RuntimeException("Entity Type " + pair[0] + " unregistered");
 				ParticleType<?> particleType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(pair[1]));

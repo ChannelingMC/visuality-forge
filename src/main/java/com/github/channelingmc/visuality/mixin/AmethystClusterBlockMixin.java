@@ -3,7 +3,6 @@ package com.github.channelingmc.visuality.mixin;
 import com.github.channelingmc.visuality.config.VisualityConfig;
 import com.github.channelingmc.visuality.registry.VisualityParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AmethystBlock;
 import net.minecraft.world.level.block.AmethystClusterBlock;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Random;
 
 @ParametersAreNonnullByDefault
 @Mixin(AmethystClusterBlock.class)
@@ -33,7 +33,7 @@ public abstract class AmethystClusterBlockMixin extends AmethystBlock implements
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
         super.animateTick(state, level, pos, random);
         if(visuality$height > 5 && VisualityConfig.SPARKLE_ENABLED.get() && random.nextInt(2) == 0) {
             double x = pos.getX() + random.nextDouble();
