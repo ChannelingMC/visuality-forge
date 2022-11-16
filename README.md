@@ -3,7 +3,7 @@
 <img align="right" width="160" src="src/main/resources/pack.png">
 
 [![CurseForge Downloads](https://cf.way2muchnoise.eu/full_521126_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/visuality-reforged)
-[![Minecraft Versions](https://cf.way2muchnoise.eu/versions/521126.svg)](https://curseforge.com/minecraft/mc-mods/visuality-forge)
+[![Minecraft Versions](https://cf.way2muchnoise.eu/versions/521126.svg)](https://curseforge.com/minecraft/mc-mods/visuality-reforged)
 
 ## About
 
