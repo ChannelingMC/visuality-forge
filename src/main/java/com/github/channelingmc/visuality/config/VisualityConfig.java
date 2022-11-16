@@ -11,28 +11,41 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class VisualityConfig {
 
     public static final ArrayList<String> DEFAULT_HIT_PARTICLES = new ArrayList<>(List.of(
-            "minecraft:skeleton=visuality:bone", "minecraft:skeleton_horse=visuality:bone",
-            "minecraft:stray=visuality:bone", "minecraft:wither_skeleton=visuality:wither_bone",
-            "minecraft:chicken=visuality:feather", "minecraft:villager=visuality:emerald"
+		"minecraft:skeleton=visuality:bone",
+	    "minecraft:skeleton_horse=visuality:bone",
+	    "minecraft:stray=visuality:bone",
+	    "minecraft:wither_skeleton=visuality:wither_bone",
+	    "minecraft:chicken=visuality:feather",
+	    "minecraft:villager=visuality:emerald"
     ));
 
     public static final ArrayList<String> DEFAULT_SHINY_ARMOR = new ArrayList<>(List.of(
-            "minecraft:golden_helmet", "minecraft:golden_chestplate",
-            "minecraft:golden_leggings", "minecraft:golden_boots",
-            "minecraft:diamond_helmet", "minecraft:diamond_chestplate",
-            "minecraft:diamond_leggings", "minecraft:diamond_boots"
+		"minecraft:golden_helmet",
+	    "minecraft:golden_chestplate",
+	    "minecraft:golden_leggings",
+	    "minecraft:golden_boots",
+	    "minecraft:diamond_helmet",
+	    "minecraft:diamond_chestplate",
+	    "minecraft:diamond_leggings",
+	    "minecraft:diamond_boots"
     ));
 
     public static final ArrayList<String> DEFAULT_SHINY_BLOCKS = new ArrayList<>(List.of(
-            "minecraft:gold_ore", "minecraft:deepslate_gold_ore",
-            "minecraft:nether_gold_ore", "minecraft:diamond_ore",
-            "minecraft:deepslate_diamond_ore", "minecraft:emerald_ore",
-            "minecraft:deepslate_emerald_ore"
+		"minecraft:gold_ore",
+	    "minecraft:deepslate_gold_ore",
+	    "minecraft:nether_gold_ore",
+	    "minecraft:diamond_ore",
+	    "minecraft:deepslate_diamond_ore",
+	    "minecraft:emerald_ore",
+	    "minecraft:deepslate_emerald_ore"
     ));
 
     public static final ForgeConfigSpec.BooleanValue SLIME_ENABLED;
@@ -43,7 +56,6 @@ public class VisualityConfig {
     public static final ForgeConfigSpec.BooleanValue WATER_CIRCLE_ENABLED;
     public static final ForgeConfigSpec.BooleanValue WATER_CIRCLE_COLORED;
     public static final ForgeConfigSpec.IntValue WATER_CIRCLE_DENSITY;
-    public static final ForgeConfigSpec.IntValue WATER_CIRCLE_RADIUS;
 
     public static final ForgeConfigSpec.BooleanValue HIT_PARTICLES_ENABLED;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> HIT_PARTICLE_ENTRIES;
@@ -175,11 +187,7 @@ public class VisualityConfig {
 		WATER_CIRCLE_DENSITY = builder
 			.translation("config.visuality.option.waterCircle.density")
 			.comment("Water Circles Density")
-			.defineInRange("density", 10, 0, Integer.MAX_VALUE);
-		WATER_CIRCLE_RADIUS = builder
-			.translation("config.visuality.option.waterCircle.radius")
-			.comment("Water Circles Radius")
-			.defineInRange("radius", 16, 0, 1024);
+			.defineInRange("density", 16, 0, 64);
 		builder.pop();
 		
 		builder.push("hitParticles");

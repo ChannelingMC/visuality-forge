@@ -1,5 +1,8 @@
 package com.github.channelingmc.visuality.mixin;
 
+import com.github.channelingmc.visuality.config.VisualityConfig;
+import com.github.channelingmc.visuality.registry.VisualityParticles;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -11,13 +14,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.github.channelingmc.visuality.config.VisualityConfig;
-import com.github.channelingmc.visuality.registry.VisualityParticles;
 
+@MethodsReturnNonnullByDefault
 @Mixin(Slime.class)
 public abstract class SlimeMixin extends Mob {
     
     @Shadow public abstract int getSize();
+    
+    @Shadow public abstract EntityType<? extends Slime> getType();
     
     private SlimeMixin(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -25,7 +29,7 @@ public abstract class SlimeMixin extends Mob {
     
     @Inject(method = "spawnCustomParticles", at = @At("RETURN"), cancellable = true, remap = false)
     private void getParticleType$modify(CallbackInfoReturnable<Boolean> cir) {
-        if (VisualityConfig.SLIME_ENABLED.get()) {
+        if (VisualityConfig.SLIME_ENABLED.get() && this.getType() == EntityType.SLIME) {
             int size = getSize();
             SimpleParticleType particleType = switch (size) {
                 case 1 -> VisualityParticles.SMALL_SLIME_BLOB.get();

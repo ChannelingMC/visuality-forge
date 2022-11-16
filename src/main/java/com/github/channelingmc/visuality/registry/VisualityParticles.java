@@ -1,11 +1,11 @@
 package com.github.channelingmc.visuality.registry;
 
+import com.github.channelingmc.visuality.Visuality;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import com.github.channelingmc.visuality.Visuality;
 
 public class VisualityParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =

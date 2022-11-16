@@ -4,23 +4,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
-import com.github.channelingmc.visuality.registry.VisualityParticles;
-
-import static com.github.channelingmc.visuality.config.VisualityConfig.*;
-import static com.github.channelingmc.visuality.config.VisualityConfig.WATER_CIRCLE_COLORED;
 
 public class WaterCircleParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
@@ -96,38 +84,6 @@ public class WaterCircleParticle extends TextureSheetParticle {
             return new WaterCircleParticle(world, x, y, z, velX, sprites);
         }
         
-    }
-    
-    public static void generate() {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (WATER_CIRCLE_ENABLED.get() || minecraft.options.particles().get() == ParticleStatus.MINIMAL)
-            return;
-        if (minecraft.level == null || minecraft.player == null)
-            return;
-        ClientLevel level = minecraft.level;
-        LocalPlayer player = minecraft.player;
-        if (!level.isRainingAt(player.getOnPos()))
-            return;
-        
-        Biome biome = level.getBiome(player.getOnPos()).value();
-        int density = WATER_CIRCLE_DENSITY.get();
-        int radius = WATER_CIRCLE_RADIUS.get();
-        if(density <= 0 || radius <= 0) return;
-        int randomDensity = level.random.nextInt(density) + (density / 2);
-        
-        for(int i = 0; i <= randomDensity; i++) {
-            int x = level.random.nextInt(radius) - (radius / 2);
-            int z = level.random.nextInt(radius) - (radius / 2);
-            BlockPos playerPos = new BlockPos((int) player.getX() + x, (int) player.getY(), (int) player.getZ() + z);
-            BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, playerPos);
-            
-            if(level.getBlockState(pos.below()).is(Blocks.WATER) && level.getBlockState(pos).isAir()) {
-                if(level.getFluidState(pos.below()).getAmount() == 8) {
-                    int color = WATER_CIRCLE_COLORED.get() ? biome.getWaterColor() : 0;
-                    ((Level) level).addParticle(VisualityParticles.WATER_CIRCLE.get(), pos.getX() + level.random.nextDouble(), pos.getY() + 0.05D, pos.getZ() + level.random.nextDouble(), color, 0, 0);
-                }
-            }
-        }
     }
     
 }

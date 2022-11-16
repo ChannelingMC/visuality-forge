@@ -1,5 +1,7 @@
 package com.github.channelingmc.visuality.mixin;
 
+import com.github.channelingmc.visuality.config.VisualityConfig;
+import com.github.channelingmc.visuality.registry.VisualityParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -14,8 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.github.channelingmc.visuality.config.VisualityConfig;
-import com.github.channelingmc.visuality.registry.VisualityParticles;
 
 @Mixin(Block.class)
 public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
@@ -41,13 +41,14 @@ public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
         if (VisualityConfig.SOUL_ENABLED.get() &&
             state.is(BlockTags.WITHER_SUMMON_BASE_BLOCKS) &&
             level.getBlockState(pos.above()).isAir() &&
-            random.nextFloat() < .005F) {
+            random.nextFloat() < .005F)
+        {
             double x = pos.getX() + random.nextDouble();
             double y = pos.getY() + 1.1D;
             double z = pos.getZ() + random.nextDouble();
             level.addParticle(VisualityParticles.SOUL.get(), x, y, z, 0, 0, 0);
         }
-        if (VisualityConfig.SHINY_BLOCK_ENABLED.get() && VisualityConfig.SHINY_ARMOR_REGISTRY.contains(this)) {
+        if (VisualityConfig.SHINY_BLOCK_ENABLED.get() && VisualityConfig.SHINY_BLOCK_REGISTRY.contains(this)) {
             for(Direction direction : Direction.values()) {
                 BlockPos blockPos = pos.relative(direction);
                 if(!level.getBlockState(blockPos).isSolidRender(level, blockPos)) {
