@@ -30,7 +30,6 @@ public class SoulParticle extends TextureSheetParticle {
         super.tick();
         this.setSpriteFromAge(this.sprites);
     }
-
     
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         

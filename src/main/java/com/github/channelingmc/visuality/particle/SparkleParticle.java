@@ -1,14 +1,19 @@
 package com.github.channelingmc.visuality.particle;
 
+import com.github.channelingmc.visuality.particle.type.ColorParticleType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.client.renderer.LightTexture;
 
 public class SparkleParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
-    private SparkleParticle(ClientLevel level, double x, double y, double z, SpriteSet sprites) {
+    private SparkleParticle(ClientLevel level,
+                            double x, double y, double z,
+                            float r, float g, float b,
+                            SpriteSet sprites) {
         super(level, x, y, z, 0, 0, 0);
+        this.setColor(r, g, b);
         this.lifetime = 5 + this.random.nextInt(4);
         this.setParticleSpeed(0D, 0D, 0D);
         this.scale(1.1F);
@@ -18,12 +23,10 @@ public class SparkleParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        if(this.age++ >= this.lifetime) {
+        if (this.age++ >= this.lifetime)
             this.remove();
-        }
-        else {
+        else
             this.setSpriteFromAge(sprites);
-        }
     }
 
     @Override
@@ -33,14 +36,14 @@ public class SparkleParticle extends TextureSheetParticle {
 
     @Override
     public int getLightColor(float tint) {
-        return 15728880;
+        return LightTexture.FULL_BRIGHT;
     }
 
-    public record Factory(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
+    public record Provider(SpriteSet sprites) implements ParticleProvider<ColorParticleType.Options> {
         
         @Override
-        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
-            return new SparkleParticle(world, x, y, z, sprites);
+        public Particle createParticle(ColorParticleType.Options options, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
+            return new SparkleParticle(world, x, y, z, options.r, options.g, options.b, sprites);
         }
         
     }

@@ -1,10 +1,8 @@
 package com.github.channelingmc.visuality.mixin;
 
-import com.github.channelingmc.visuality.config.VisualityConfig;
-import com.github.channelingmc.visuality.registry.VisualityParticles;
+import com.github.channelingmc.visuality.Visuality;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ItemLike;
@@ -25,43 +23,23 @@ public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
     }
 
     @Inject(method = "fallOn", at = @At("TAIL"))
-    void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float f, CallbackInfo ci) {
-        if(VisualityConfig.SOUL_ENABLED.get() && state.is(BlockTags.WITHER_SUMMON_BASE_BLOCKS)) {
-            double x = entity.getX();
-            double y = entity.getY() + 0.125;
-            double z = entity.getZ();
-            for(int i = 0; i <= level.random.nextInt(5) + 1; i++) {
-                level.addParticle(VisualityParticles.SOUL.get(), x, y, z, 0, 0, 0);
-            }
+    private void fallOn$spawnParticles(Level level, BlockState state, BlockPos pos, Entity entity, float f, CallbackInfo ci) {
+        if (level.isClientSide) {
+            int amount = Mth.log2(Mth.ceil(f)) + 1;
+            Visuality.BLOCK_STEP_PARTICLES.spawnParticles(amount, level, state, pos, entity);
+        }
+    }
+    
+    @Inject(method = "stepOn", at = @At("TAIL"))
+    private void stepOn$spawnParticles(Level level, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
+        if (level.isClientSide && (entity.tickCount - entity.getId()) % Visuality.BLOCK_STEP_PARTICLES.interval() == 0) {
+            Visuality.BLOCK_STEP_PARTICLES.spawnParticles(1, level, state, pos, entity);
         }
     }
 
     @Inject(method = "animateTick", at = @At("TAIL"))
-    void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (VisualityConfig.SOUL_ENABLED.get() &&
-            state.is(BlockTags.WITHER_SUMMON_BASE_BLOCKS) &&
-            level.getBlockState(pos.above()).isAir() &&
-            random.nextFloat() < .005F)
-        {
-            double x = pos.getX() + random.nextDouble();
-            double y = pos.getY() + 1.1D;
-            double z = pos.getZ() + random.nextDouble();
-            level.addParticle(VisualityParticles.SOUL.get(), x, y, z, 0, 0, 0);
-        }
-        if (VisualityConfig.SHINY_BLOCK_ENABLED.get() && VisualityConfig.SHINY_BLOCK_REGISTRY.contains(this)) {
-            for(Direction direction : Direction.values()) {
-                BlockPos blockPos = pos.relative(direction);
-                if(!level.getBlockState(blockPos).isSolidRender(level, blockPos)) {
-                    if(random.nextFloat() > 0.8) {
-                        Direction.Axis axis = direction.getAxis();
-                        double x = axis == Direction.Axis.X ? 0.5 + 0.5625 * direction.getStepX() : random.nextFloat();
-                        double y = axis == Direction.Axis.Y ? 0.5 + 0.5625 * direction.getStepY() : random.nextFloat();
-                        double z = axis == Direction.Axis.Z ? 0.5 + 0.5625 * direction.getStepZ() : random.nextFloat();
-                        level.addParticle(VisualityParticles.SPARKLE.get(), pos.getX() + x, pos.getY() + y, pos.getZ() + z, 0, 0, 0);
-                    }
-                }
-            }
-        }
+    private void animateTick$spawnParticles(BlockState state, Level level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+        Visuality.BLOCK_AMBIENT_PARTICLES.spawnParticles(state, level, pos, random);
     }
 
 }

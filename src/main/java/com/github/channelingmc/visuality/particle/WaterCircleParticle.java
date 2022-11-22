@@ -1,12 +1,12 @@
 package com.github.channelingmc.visuality.particle;
 
+import com.github.channelingmc.visuality.particle.type.ColorParticleType;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
@@ -14,11 +14,13 @@ public class WaterCircleParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private static final Quaternion QUATERNION = new Quaternion(0F, -0.7F, 0.7F, 0F);
 
-    private WaterCircleParticle(ClientLevel level, double x, double y, double z, double color, SpriteSet sprites) {
+    private WaterCircleParticle(ClientLevel level, double x, double y, double z, float r, float g, float b, SpriteSet sprites) {
         super(level, x, y, z, 0, 0, 0);
         this.lifetime = 5 + this.random.nextInt(3);
         this.setParticleSpeed(0D, 0D, 0D);
-        if(color != 0) this.setColor((int) color);
+        if (r > 0 && g > 0 && b > 0) {
+            this.setColor(r, g, b);
+        }
         this.scale(2F + (float) this.random.nextInt(11) / 10);
         this.sprites = sprites;
         this.setSpriteFromAge(sprites);
@@ -33,10 +35,10 @@ public class WaterCircleParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        if(this.age > this.lifetime / 2) {
+        if (this.age > this.lifetime / 2) {
             this.setAlpha(1.0F - ((float) this.age - (float) (this.lifetime / 2)) / (float) this.lifetime);
         }
-        if(this.age++ >= this.lifetime) {
+        if (this.age++ >= this.lifetime) {
             this.remove();
         }
         else {
@@ -54,7 +56,7 @@ public class WaterCircleParticle extends TextureSheetParticle {
         Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
         float f4 = this.getQuadSize(ticks);
 
-        for(int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             Vector3f vector3f = vector3fs[i];
             vector3f.transform(QUATERNION);
             vector3f.mul(f4);
@@ -77,11 +79,11 @@ public class WaterCircleParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public record Factory(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
+    public record Provider(SpriteSet sprites) implements ParticleProvider<ColorParticleType.Options> {
         
         @Override
-        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
-            return new WaterCircleParticle(world, x, y, z, velX, sprites);
+        public Particle createParticle(ColorParticleType.Options options, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
+            return new WaterCircleParticle(world, x, y, z, options.r, options.g, options.b, sprites);
         }
         
     }
