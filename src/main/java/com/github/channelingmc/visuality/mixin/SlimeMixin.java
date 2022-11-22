@@ -1,9 +1,9 @@
 package com.github.channelingmc.visuality.mixin;
 
-import com.github.channelingmc.visuality.config.VisualityConfig;
-import com.github.channelingmc.visuality.registry.VisualityParticles;
+import com.github.channelingmc.visuality.config.ClientConfig;
+import com.github.channelingmc.visuality.particle.type.VisualityParticleTypes;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -29,22 +29,20 @@ public abstract class SlimeMixin extends Mob {
     
     @Inject(method = "spawnCustomParticles", at = @At("RETURN"), cancellable = true, remap = false)
     private void getParticleType$modify(CallbackInfoReturnable<Boolean> cir) {
-        if (VisualityConfig.SLIME_ENABLED.get() && this.getType() == EntityType.SLIME) {
+        if (ClientConfig.SLIME_ENABLED.get() && this.getType() == EntityType.SLIME) {
             int size = getSize();
-            SimpleParticleType particleType = switch (size) {
-                case 1 -> VisualityParticles.SMALL_SLIME_BLOB.get();
-                case 2 -> VisualityParticles.MEDIUM_SLIME_BLOB.get();
-                default -> VisualityParticles.BIG_SLIME_BLOB.get();
+            ParticleOptions particle = switch (size) {
+                case 1 -> VisualityParticleTypes.SMALL_SLIME_BLOB.get().withColor(0x88FF79);
+                case 2 -> VisualityParticleTypes.MEDIUM_SLIME_BLOB.get().withColor(0x88FF79);
+                default -> VisualityParticleTypes.BIG_SLIME_BLOB.get().withColorAndScale(0x88FF79, 2);
             };
             int i = getSize();
-            for(int j = 0; j < i * 8; ++j) {
+            for (int j = 0; j < i * 8; ++j) {
                 float f = this.random.nextFloat() * ((float)Math.PI * 2F);
                 float f1 = this.random.nextFloat() * 0.5F + 0.5F;
                 float f2 = Mth.sin(f) * (float)i * 0.5F * f1;
                 float f3 = Mth.cos(f) * (float)i * 0.5F * f1;
-                this.level.addParticle(particleType,
-                    this.getX() + f2, this.getY(), this.getZ() + f3,
-                    8978297, size > 2 ? 2 : 1, 0);
+                this.level.addParticle(particle, this.getX() + f2, this.getY(), this.getZ() + f3, 0, 0, 0);
             }
             cir.setReturnValue(true);
         }

@@ -18,12 +18,10 @@ public class ChargeParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        if(this.age++ >= this.lifetime) {
+        if (this.age++ >= this.lifetime)
             this.remove();
-        }
-        else {
+        else
             this.setSpriteFromAge(sprites);
-        }
     }
 
     @Override
@@ -31,7 +29,7 @@ public class ChargeParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public record Factory(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
+    public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         
         @Override
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ) {
