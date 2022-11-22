@@ -38,7 +38,7 @@ public class BlockStepParticles extends ReloadableJsonConfig {
     private final IdentityHashMap<Block, Particle> particles = new IdentityHashMap<>();
     
     public BlockStepParticles() {
-        super(Visuality.loc("block/step"));
+        super(Visuality.loc("particle_emitters/block/step"));
         this.entries = createDefaultEntries();
         for (Entry entry : entries) {
             for (Block block : entry.blocks) {
@@ -125,7 +125,7 @@ public class BlockStepParticles extends ReloadableJsonConfig {
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             VisualityCodecs.compactListOf(ForgeRegistries.BLOCKS.getCodec()).fieldOf("block")
                 .forGetter(Entry::blocks),
-            Particle.CODEC.fieldOf("options")
+            Particle.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)
         ).apply(instance, Entry::new));
     

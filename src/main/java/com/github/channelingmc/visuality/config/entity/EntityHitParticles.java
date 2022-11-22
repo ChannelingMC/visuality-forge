@@ -43,7 +43,7 @@ public class EntityHitParticles extends ReloadableJsonConfig {
     private final IdentityHashMap<EntityType<?>, Particle> particles = new IdentityHashMap<>();
     
     public EntityHitParticles() {
-        super(Visuality.loc("entity/hit"));
+        super(Visuality.loc("particle_emitters/entity/hit"));
         this.entries = createDefaultEntries();
         for (Entry entry : entries) {
             for (EntityType<?> type : entry.entities) {
@@ -157,7 +157,7 @@ public class EntityHitParticles extends ReloadableJsonConfig {
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             VisualityCodecs.compactListOf(ForgeRegistries.ENTITY_TYPES.getCodec()).fieldOf("entity")
                 .forGetter(Entry::entities),
-            Particle.CODEC.fieldOf("options")
+            Particle.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)
         ).apply(instance, Entry::new));
     

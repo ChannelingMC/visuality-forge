@@ -35,12 +35,12 @@ import java.util.*;
 public class BlockAmbientParticles extends ReloadableJsonConfig {
     static final EnumSet<Direction> ALL_DIRECTIONS = EnumSet.allOf(Direction.class);
     private boolean enabled = true;
-    private int interval = 20;
+    private int interval = 10;
     private List<Entry> entries;
     private final IdentityHashMap<Block, Pair<Direction[], Particle>> particles = new IdentityHashMap<>();
     
     public BlockAmbientParticles() {
-        super(Visuality.loc("block/ambient"));
+        super(Visuality.loc("particle_emitters/block/ambient"));
         this.entries = createDefaultEntries();
         for (Entry entry : entries) {
             for (Block block : entry.blocks) {
@@ -147,7 +147,7 @@ public class BlockAmbientParticles extends ReloadableJsonConfig {
                     optional -> optional.orElse(ALL_DIRECTIONS),
                     set -> set.size() == 6 ? Optional.empty() : Optional.of(set)
                 ).forGetter(Entry::directions),
-            Particle.CODEC.fieldOf("options")
+            Particle.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)
         ).apply(instance, Entry::new));
     
