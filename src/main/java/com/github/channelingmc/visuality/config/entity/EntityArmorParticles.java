@@ -46,7 +46,7 @@ public class EntityArmorParticles extends ReloadableJsonConfig {
     private final IdentityHashMap<Item, Particle> particles = new IdentityHashMap<>();
     
     public EntityArmorParticles() {
-        super(Visuality.loc("entity/armor"));
+        super(Visuality.loc("particle_emitters/entity/armor"));
         this.entries = createDefaultEntries();
         for (Entry entry : entries) {
             for (Item armor : entry.armors) {
@@ -157,7 +157,7 @@ public class EntityArmorParticles extends ReloadableJsonConfig {
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             VisualityCodecs.compactListOf(ForgeRegistries.ITEMS.getCodec()).fieldOf("armor")
                 .forGetter(Entry::armors),
-            Particle.CODEC.fieldOf("options")
+            Particle.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)
         ).apply(instance, Entry::new));
     

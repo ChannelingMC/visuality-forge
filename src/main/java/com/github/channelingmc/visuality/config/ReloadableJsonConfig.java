@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -56,16 +57,21 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
         profiler.pop();
         List<Pair<String, JsonObject>> list = new ArrayList<>();
         try {
-            for (Resource resource : resourceManager.getResourceStack(id)) {
-                profiler.push(resource.sourcePackId());
-                try {
-                    Reader reader = resource.openAsReader();
-                    profiler.push("parse");
-                    JsonObject object = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+            for(String namespace : resourceManager.getNamespaces()) {
+                profiler.push(namespace);
+                ResourceLocation id = new ResourceLocation(namespace, this.id.getPath());
+                for (Resource resource : resourceManager.getResourceStack(id)) {
+                    profiler.push(resource.sourcePackId());
+                    try {
+                        Reader reader = resource.openAsReader();
+                        profiler.push("parse");
+                        JsonObject object = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+                        profiler.pop();
+                        list.add(Pair.of(resource.sourcePackId() + '#' + id, object));
+                    } catch (RuntimeException exception) {
+                        logger.warn("Invalid {} in resourcepack: '{}'", id, resource.sourcePackId(), exception);
+                    }
                     profiler.pop();
-                    list.add(Pair.of(resource.sourcePackId(), object));
-                } catch (RuntimeException exception) {
-                    logger.warn("Invalid {} in resourcepack: '{}'", id, resource.sourcePackId(), exception);
                 }
                 profiler.pop();
             }
