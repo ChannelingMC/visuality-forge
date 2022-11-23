@@ -18,10 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -60,18 +58,20 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
             for(String namespace : resourceManager.getNamespaces()) {
                 profiler.push(namespace);
                 ResourceLocation id = new ResourceLocation(namespace, this.id.getPath());
-                for (Resource resource : resourceManager.getResourceStack(id)) {
-                    profiler.push(resource.sourcePackId());
-                    try {
-                        Reader reader = resource.openAsReader();
-                        profiler.push("parse");
-                        JsonObject object = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+                for (Resource resource : resourceManager.getResources(id)) {
+                    String packId = resource.getSourceName();
+                    profiler.push(packId);
+                    try (InputStream inputstream = resource.getInputStream()) {
+                        try (Reader reader = new InputStreamReader(inputstream, StandardCharsets.UTF_8)) {
+                            profiler.push("parse");
+                            JsonObject object = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+                            profiler.pop();
+                            list.add(Pair.of(packId + '#' + id, object));
+                        } catch (RuntimeException exception) {
+                            logger.warn("Invalid {} in resourcepack: '{}'", id, packId, exception);
+                        }
                         profiler.pop();
-                        list.add(Pair.of(resource.sourcePackId() + '#' + id, object));
-                    } catch (RuntimeException exception) {
-                        logger.warn("Invalid {} in resourcepack: '{}'", id, resource.sourcePackId(), exception);
                     }
-                    profiler.pop();
                 }
                 profiler.pop();
             }

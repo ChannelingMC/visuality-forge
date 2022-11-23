@@ -33,7 +33,7 @@ public record Particle(ParticleOptions options, Vec3 velocity) {
         final Dynamic<T> dynamic = new Dynamic<>(ops, input);
         final DataResult<Particle> result = dynamic.getElement("particle")
             .flatMap(t -> VisualityCodecs.PARTICLE.parse(ops, t))
-            .apply2(Particle::new, dynamic.getElement("velocity").flatMap(t -> Vec3.CODEC.parse(ops, t)));
+            .apply2(Particle::new, dynamic.getElement("velocity").flatMap(t -> VisualityCodecs.VEC3.parse(ops, t)));
         if (result.error().isEmpty())
             return result.map(pwv -> Pair.of(pwv, input));
         else
@@ -47,7 +47,7 @@ public record Particle(ParticleOptions options, Vec3 velocity) {
             ? VisualityCodecs.PARTICLE.encode(input.options, ops, prefix)
             : ops.mapBuilder()
                 .add("particle", VisualityCodecs.PARTICLE.encodeStart(ops, input.options))
-                .add("velocity", Vec3.CODEC.encodeStart(ops, input.velocity))
+                .add("velocity", VisualityCodecs.VEC3.encodeStart(ops, input.velocity))
                 .build(prefix);
     }
     

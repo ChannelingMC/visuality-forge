@@ -7,10 +7,12 @@ import com.github.channelingmc.visuality.config.entity.EntityArmorParticles;
 import com.github.channelingmc.visuality.config.entity.EntityHitParticles;
 import com.github.channelingmc.visuality.particle.*;
 import com.github.channelingmc.visuality.particle.type.VisualityParticleTypes;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -47,18 +49,19 @@ public class Visuality {
         event.registerReloadListener(BLOCK_STEP_PARTICLES = new BlockStepParticles());
     }
     
-    public void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        event.register(VisualityParticleTypes.SPARKLE.get(), SparkleParticle.Provider::new);
-        event.register(VisualityParticleTypes.BONE.get(), SolidFallingParticle.Provider::new);
-        event.register(VisualityParticleTypes.WITHER_BONE.get(), SolidFallingParticle.Provider::new);
-        event.register(VisualityParticleTypes.FEATHER.get(), FeatherParticle.Provider::new);
-        event.register(VisualityParticleTypes.SMALL_SLIME_BLOB.get(), SlimeParticle.Provider::new);
-        event.register(VisualityParticleTypes.MEDIUM_SLIME_BLOB.get(), SlimeParticle.Provider::new);
-        event.register(VisualityParticleTypes.BIG_SLIME_BLOB.get(), SlimeParticle.Provider::new);
-        event.register(VisualityParticleTypes.CHARGE.get(), ChargeParticle.Provider::new);
-        event.register(VisualityParticleTypes.WATER_CIRCLE.get(), WaterCircleParticle.Provider::new);
-        event.register(VisualityParticleTypes.EMERALD.get(), SolidFallingParticle.Provider::new);
-        event.register(VisualityParticleTypes.SOUL.get(), SoulParticle.Provider::new);
+    public void registerParticleProviders(ParticleFactoryRegisterEvent event) {
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        engine.register(VisualityParticleTypes.SPARKLE.get(), SparkleParticle.Provider::new);
+        engine.register(VisualityParticleTypes.BONE.get(), SolidFallingParticle.Provider::new);
+        engine.register(VisualityParticleTypes.WITHER_BONE.get(), SolidFallingParticle.Provider::new);
+        engine.register(VisualityParticleTypes.FEATHER.get(), FeatherParticle.Provider::new);
+        engine.register(VisualityParticleTypes.SMALL_SLIME_BLOB.get(), SlimeParticle.Provider::new);
+        engine.register(VisualityParticleTypes.MEDIUM_SLIME_BLOB.get(), SlimeParticle.Provider::new);
+        engine.register(VisualityParticleTypes.BIG_SLIME_BLOB.get(), SlimeParticle.Provider::new);
+        engine.register(VisualityParticleTypes.CHARGE.get(), ChargeParticle.Provider::new);
+        engine.register(VisualityParticleTypes.WATER_CIRCLE.get(), WaterCircleParticle.Provider::new);
+        engine.register(VisualityParticleTypes.EMERALD.get(), SolidFallingParticle.Provider::new);
+        engine.register(VisualityParticleTypes.SOUL.get(), SoulParticle.Provider::new);
     }
     
     public static ResourceLocation loc(String path) {

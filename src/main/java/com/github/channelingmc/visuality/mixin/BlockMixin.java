@@ -3,7 +3,6 @@ package com.github.channelingmc.visuality.mixin;
 import com.github.channelingmc.visuality.Visuality;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -14,6 +13,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Random;
 
 @Mixin(Block.class)
 public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
@@ -38,7 +39,7 @@ public abstract class BlockMixin extends BlockBehaviour implements ItemLike {
     }
 
     @Inject(method = "animateTick", at = @At("TAIL"))
-    private void animateTick$spawnParticles(BlockState state, Level level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    private void animateTick$spawnParticles(BlockState state, Level level, BlockPos pos, Random random, CallbackInfo ci) {
         Visuality.BLOCK_AMBIENT_PARTICLES.spawnParticles(state, level, pos, random);
     }
 

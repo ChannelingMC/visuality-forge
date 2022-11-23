@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Random;
 
 @ApiStatus.Internal
 public class EntityArmorParticles extends ReloadableJsonConfig {
@@ -56,16 +56,16 @@ public class EntityArmorParticles extends ReloadableJsonConfig {
         MinecraftForge.EVENT_BUS.addListener(this::spawnParticles);
     }
     
-    public void spawnParticles(LivingEvent.LivingTickEvent event) {
+    public void spawnParticles(LivingEvent.LivingUpdateEvent event) {
         if (!enabled)
             return;
         
-        LivingEntity entity = event.getEntity();
+        LivingEntity entity = event.getEntityLiving();
         Level level = entity.level;
         if(!level.isClientSide || !entity.isAlive())
             return;
         
-        RandomSource random = entity.getRandom();
+        Random random = entity.getRandom();
         if (random.nextInt(interval) != 0)
             return;
         

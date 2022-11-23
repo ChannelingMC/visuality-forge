@@ -61,7 +61,7 @@ public class EntityHitParticles extends ReloadableJsonConfig {
         if (!(source.getEntity() instanceof AbstractClientPlayer attacker))
             return;
         
-        LivingEntity entity = event.getEntity();
+        LivingEntity entity = event.getEntityLiving();
         EntityType<?> type = entity.getType();
         if (!particles.containsKey(type) ||
             entity.isInvulnerableTo(source) ||
@@ -155,7 +155,7 @@ public class EntityHitParticles extends ReloadableJsonConfig {
     private record Entry(List<EntityType<?>> entities, Particle particle) {
     
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            VisualityCodecs.compactListOf(ForgeRegistries.ENTITY_TYPES.getCodec()).fieldOf("entity")
+            VisualityCodecs.compactListOf(ForgeRegistries.ENTITIES.getCodec()).fieldOf("entity")
                 .forGetter(Entry::entities),
             Particle.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)

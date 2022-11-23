@@ -3,7 +3,6 @@ package com.github.channelingmc.visuality.event;
 import com.github.channelingmc.visuality.config.ClientConfig;
 import com.github.channelingmc.visuality.particle.type.VisualityParticleTypes;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PowerableMob;
 import net.minecraft.world.level.Level;
@@ -13,14 +12,16 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Random;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ParticleEventHandler {
     
     @SubscribeEvent
-    public static void spawnChargeParticles(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void spawnChargeParticles(LivingEvent.LivingUpdateEvent event) {
+        LivingEntity entity = event.getEntityLiving();
         Level level = entity.getLevel();
-        RandomSource random = entity.getRandom();
+        Random random = entity.getRandom();
         if (level.isClientSide &&
             random.nextInt(20) == 0 &&
             entity instanceof PowerableMob powerable &&

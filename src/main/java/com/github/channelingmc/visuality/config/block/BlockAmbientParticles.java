@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -50,7 +49,7 @@ public class BlockAmbientParticles extends ReloadableJsonConfig {
     }
     
     @SuppressWarnings("deprecation")
-    public void spawnParticles(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void spawnParticles(BlockState state, Level level, BlockPos pos, Random random) {
         if (!enabled || !level.isAreaLoaded(pos, 1))
             return;
         var keys = particles.keySet();
