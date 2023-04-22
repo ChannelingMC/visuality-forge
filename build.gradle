@@ -16,7 +16,7 @@ println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty '
 minecraft {
     mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
 
-    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
 
@@ -79,10 +79,20 @@ minecraft {
 }
 
 repositories {
+    maven {
+        name "JitPack"
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    compileOnly(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
+    implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:${mixin_extras_version}")) {
+        transitive = false
+        jarJar.ranged(it, "[${mixin_extras_version},)")
+    }
 
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 }
@@ -109,27 +119,38 @@ processResources {
     }
 }
 
-jar {
-    from(["LICENSE_FABRIC","LICENSE_FORGE"]) {
-        rename {
-            "${it}_" + project.archivesBaseName.toUpperCase(Locale.ROOT)
+void processJar(Jar jarTask) {
+    jarTask.configure {
+        from "LICENSE_FABRIC"
+        from "LICENSE_FORGE"
+
+        manifest {
+            attributes([
+                "Specification-Title"     : "${mod_name}",
+                "Specification-Vendor"    : "PinkGoosik",
+                "Specification-Version"   : "${mod_version}",
+                "Implementation-Title"    : "${mod_id}-forge",
+                "Implementation-Version"  : project.version_meta,
+                "Implementation-Vendor"   : "LimonBlaze",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "${mod_id}.mixins.json"
+            ])
         }
-    }
-    manifest {
-        attributes([
-            "Specification-Title"     : "${mod_name}",
-            "Specification-Vendor"    : "PinkGoosik",
-            "Specification-Version"   : "${mod_version}",
-            "Implementation-Title"    : "${mod_id}-forge",
-            "Implementation-Version"  : project.version_meta,
-            "Implementation-Vendor"   : "LimonBlaze",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs"            : "${mod_id}.mixins.json"
-        ])
     }
 }
 
-jar.finalizedBy('reobfJar')
+jar {
+    classifier 'slim'
+    finalizedBy 'reobfJar'
+}
+
+tasks.jarJar {
+    classifier ""
+    finalizedBy reobf.maybeCreate('jarJar')
+}
+
+processJar(jar)
+processJar(tasks.jarJar)
 
 publishing {
     publications {

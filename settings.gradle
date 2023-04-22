@@ -30,3 +30,5 @@ pluginManagement {
         mavenCentral()
     }
 }
+
+rootProject.name = "visuality-forge"
