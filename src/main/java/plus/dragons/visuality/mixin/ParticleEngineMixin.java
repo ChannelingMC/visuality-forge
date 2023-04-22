@@ -40,13 +40,6 @@ public class ParticleEngineMixin implements VisualityParticleEngine {
         this.providers.put(type.getId(), registration.create(spriteSet));
     }
     
-    @ModifyReceiver(method = "reload", at = @At(value = "INVOKE", target = "Ljava/util/Set;stream()Ljava/util/stream/Stream;"))
-    private Set<ResourceLocation> visuality$mergeParticleTypes(Set<ResourceLocation> original) {
-        Set<ResourceLocation> result = new HashSet<>(original);
-        result.addAll(VisualityRegistries.PARTICLE_TYPES.get().getKeys());
-        return result;
-    }
-    
     @Nullable
     @ModifyExpressionValue(method = "makeParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Registry;getKey(Ljava/lang/Object;)Lnet/minecraft/resources/ResourceLocation;"))
     private ResourceLocation visuality$particleAlias(@Nullable ResourceLocation original, @Local(ordinal = 0, argsOnly = true) ParticleOptions options) {
