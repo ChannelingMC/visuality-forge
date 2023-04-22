@@ -2,13 +2,14 @@ package plus.dragons.visuality.particle.type;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Vector3f;
 
 import java.util.Locale;
 
@@ -18,7 +19,7 @@ public class ColorScaleParticleType extends ParticleType<ColorScaleParticleType.
     public ColorScaleParticleType(boolean overrideLimiter) {
         super(overrideLimiter, Deserializer.INSTANCE);
         this.codec = RecordCodecBuilder.create(instance -> instance.group(
-            Vector3f.CODEC.fieldOf("color")
+            ExtraCodecs.VECTOR3F.fieldOf("color")
                 .forGetter(Options::color),
             Codec.FLOAT.fieldOf("scale")
                 .forGetter(Options::scale)
