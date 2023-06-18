@@ -19,7 +19,7 @@ public class ParticleEventHandler {
     @SubscribeEvent
     public static void spawnChargeParticles(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        Level level = entity.getLevel();
+        Level level = entity.level();
         RandomSource random = entity.getRandom();
         if (Config.CHARGE_ENABLED.get() &&
             random.nextInt(20) == 0 &&

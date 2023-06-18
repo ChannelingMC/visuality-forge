@@ -57,7 +57,7 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
             return;
         
         LivingEntity entity = event.getEntity();
-        Level level = entity.level;
+        Level level = entity.level();
         if(!level.isClientSide || !entity.isAlive())
             return;
         

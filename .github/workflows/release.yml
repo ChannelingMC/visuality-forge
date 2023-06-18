@@ -5,7 +5,7 @@ permissions:
   contents: write
 
 env:
-  MINECRAFT_VERSION: 1.19.3-1.19.4
+  MINECRAFT_VERSION: 1.20-1.20.1
   JAVA_VERSION: 17
   VERSION: 2.0.1
 
@@ -54,8 +54,8 @@ jobs:
           loaders: |
             forge
           game-versions: |
-            1.19.3
-            1.19.4
+            1.20
+            1.20.1
           java: |
             ${{ env.JAVA_VERSION }}
           retry-attempts: 2

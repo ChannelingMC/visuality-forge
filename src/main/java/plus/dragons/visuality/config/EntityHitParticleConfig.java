@@ -57,7 +57,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
         
         DamageSource damageSource = event.getSource();
         LivingEntity entity = event.getEntity();
-        if (!entity.level.isClientSide)
+        if (!entity.level().isClientSide)
             return;
     
         EntityType<?> type = entity.getType();
@@ -85,7 +85,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
         double y = entity.getY(0.5);
         double z = entity.getZ();
         for (int i = 0; i < count; ++i) {
-            particle.spawn(entity.level, x, y, z);
+            particle.spawn(entity.level(), x, y, z);
         }
     }
     
