@@ -40,8 +40,8 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           # CurseForge
-          #curseforge-id: 704256
-          #curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-id: 704256
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           # Config
           name: "Visuality: Reforged ${{ env.VERSION }} for ${{ env.MINECRAFT_VERSION }}"

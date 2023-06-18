@@ -7,7 +7,7 @@ plugins {
 }
 
 archivesBaseName = project.mod_name
-version = project.mod_version + "+" + project.version_meta
+version = project.mod_version
 group = project.maven_group
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -130,7 +130,7 @@ void processJar(Jar jarTask) {
                 "Specification-Vendor"    : "PinkGoosik",
                 "Specification-Version"   : "${mod_version}",
                 "Implementation-Title"    : "${mod_id}-forge",
-                "Implementation-Version"  : project.version_meta,
+                "Implementation-Version"  : 1,
                 "Implementation-Vendor"   : "LimonBlaze",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs"            : "${mod_id}.mixins.json"
