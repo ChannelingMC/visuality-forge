@@ -1,0 +1,62 @@
+name: Release
+on: [workflow_dispatch]
+
+permissions:
+  contents: write
+
+env:
+  MINECRAFT_VERSION: 1.19.3-1.19.4
+  MINECRAFT_VERSION_IN_PUBLISH_PARAMETER: "[1.19.3,1.19.5)"
+  JAVA_VERSION: 17
+  VERSION: 2.0.1
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Publish (CurseForge/Modrinth)
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          # Modrinth
+          modrinth-id: z13R7Et1
+          modrinth-featured: true
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          # CurseForge
+          curseforge-id: 704256
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          # Config
+          name: "Visuality: Reforged ${{ env.VERSION }} for ${{ env.MINECRAFT_VERSION }}"
+          version: ${{ env.VERSION }}
+          version-type: release
+          changelog-file: changelog/${{ env.VERSION }}.md
+          files-primary: build/libs/*-${{ env.VERSION }}!(-@(dev|sources|slim)).jar
+          files-secondary: ""
+
+          loaders: |
+            forge
+          game-versions: |
+            ${{ env.MINECRAFT_VERSION_IN_PUBLISH_PARAMETER }}
+          java: |
+            ${{ env.JAVA_VERSION }}
+          retry-attempts: 2
+          retry-delay: 10000
