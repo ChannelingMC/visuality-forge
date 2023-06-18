@@ -6,7 +6,6 @@ permissions:
 
 env:
   MINECRAFT_VERSION: 1.19.3-1.19.4
-  MINECRAFT_VERSION_IN_PUBLISH_PARAMETER: "[1.19.3,1.19.5)"
   JAVA_VERSION: 17
   VERSION: 2.0.1
 
@@ -41,8 +40,8 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           # CurseForge
-          curseforge-id: 704256
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          #curseforge-id: 704256
+          #curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           # Config
           name: "Visuality: Reforged ${{ env.VERSION }} for ${{ env.MINECRAFT_VERSION }}"
@@ -55,7 +54,8 @@ jobs:
           loaders: |
             forge
           game-versions: |
-            ${{ env.MINECRAFT_VERSION_IN_PUBLISH_PARAMETER }}
+            1.19.3
+            1.19.4
           java: |
             ${{ env.JAVA_VERSION }}
           retry-attempts: 2
