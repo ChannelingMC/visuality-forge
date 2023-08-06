@@ -30,7 +30,7 @@ public abstract class SlimeMixin extends Mob {
     @Inject(method = "spawnCustomParticles", at = @At("RETURN"), cancellable = true, remap = false)
     private void getParticleType$modify(CallbackInfoReturnable<Boolean> cir) {
         if (Config.SLIME_ENABLED.get() && this.getType() == EntityType.SLIME) {
-            if(this.level().isClientSide()){
+            if(this.level.isClientSide()){
                 int size = getSize();
                 ParticleOptions particle = switch (size) {
                     case 1 -> VisualityParticles.SMALL_SLIME_BLOB.get().withColor(0x88FF79);
@@ -43,7 +43,7 @@ public abstract class SlimeMixin extends Mob {
                     float f1 = this.random.nextFloat() * 0.5F + 0.5F;
                     float f2 = Mth.sin(f) * (float)i * 0.5F * f1;
                     float f3 = Mth.cos(f) * (float)i * 0.5F * f1;
-                    this.level().addParticle(particle, this.getX() + f2, this.getY(), this.getZ() + f3, 0, 0, 0);
+                    this.level.addParticle(particle, this.getX() + f2, this.getY(), this.getZ() + f3, 0, 0, 0);
                 }
             }
             cir.setReturnValue(true);
