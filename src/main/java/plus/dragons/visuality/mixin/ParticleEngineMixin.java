@@ -1,6 +1,7 @@
 package plus.dragons.visuality.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
@@ -16,7 +17,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import plus.dragons.visuality.particle.VisualityParticleEngine;
 import plus.dragons.visuality.registry.VisualityRegistries;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(ParticleEngine.class)
 public class ParticleEngineMixin implements VisualityParticleEngine {
@@ -40,7 +43,9 @@ public class ParticleEngineMixin implements VisualityParticleEngine {
     @ModifyReceiver(method = "reload", at = @At(value = "INVOKE", target = "Ljava/util/Set;stream()Ljava/util/stream/Stream;"))
     private Set<ResourceLocation> visuality$mergeParticleTypes(Set<ResourceLocation> original) {
         Set<ResourceLocation> result = new HashSet<>(original);
-        result.addAll(VisualityRegistries.PARTICLE_TYPES.get().getKeys());
+        if(VisualityRegistries.PARTICLE_TYPES!=null && VisualityRegistries.PARTICLE_TYPES.get()!=null){
+            result.addAll(VisualityRegistries.PARTICLE_TYPES.get().getKeys());
+        }
         return result;
     }
     
