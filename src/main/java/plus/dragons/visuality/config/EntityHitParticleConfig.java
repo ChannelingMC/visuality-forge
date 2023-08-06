@@ -91,7 +91,10 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
     
     private double getAttackDamage(LivingEntity attacker) {
         var modifiers = attacker.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
-        double base = attacker.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
+        double base = 0;
+        if(attacker.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE)){
+            base = attacker.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
+        }
         double addition = 0;
         double multiplyBase = 1;
         double multiplyTotal = 1;
