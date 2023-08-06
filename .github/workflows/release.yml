@@ -50,9 +50,9 @@ jobs:
           changelog-file: changelog/${{ env.VERSION }}.md
           files-primary: build/libs/*-${{ env.VERSION }}!(-@(dev|sources|slim)).jar
           files-secondary: ""
-
           loaders: |
             forge
+            neoforge
           game-versions: |
             1.20
             1.20.1
