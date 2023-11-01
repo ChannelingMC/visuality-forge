@@ -3,7 +3,10 @@ package plus.dragons.visuality.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -86,7 +89,7 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
         for (var entry : list) {
             String name = entry.getFirst();
             JsonObject object = entry.getSecond();
-            if (!CraftingHelper.processConditions(object, "conditions", ICondition.IContext.EMPTY)) {
+            if (!processConditions(object, "conditions", ICondition.IContext.EMPTY)) {
                 logger.debug("Skipping loading {} from {} as it's conditions were not met", id, name);
                 continue;
             }
@@ -100,6 +103,14 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
         }
         profiler.pop();
         profiler.endTick();
+    }
+
+    protected boolean processConditions(JsonObject json, String item, ICondition.IContext context){
+        if(json.has(item)){
+            var condition = Util.getOrThrow(ICondition.SAFE_CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject(item)), JsonParseException::new);
+            return condition.test(context);
+        }
+        return false;
     }
     
     /**
