@@ -1,8 +1,6 @@
 pluginManagement {
     resolutionStrategy {
         eachPlugin({
-            if (requested.id.namespace == 'net.minecraftforge')
-                it.useModule(group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: forgegradle_version)
             if (requested.id.namespace == 'org.spongepowered')
                 it.useModule(group: 'org.spongepowered', name: 'mixingradle', version: mixingradle_version)
             if (requested.id.namespace == 'org.parchmentmc.librarian')
@@ -12,8 +10,8 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven {
-            name 'Forge Maven'
-            url 'https://maven.minecraftforge.net'
+            name 'NeoForge Maven'
+            url 'https://maven.neoforged.net/releases'
         }
         maven {
             name 'SpongePowered Maven'
