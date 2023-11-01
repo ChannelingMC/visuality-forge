@@ -2,7 +2,6 @@ plugins {
     id 'idea'
     id 'net.neoforged.gradle.userdev' version "${neogradle_version}"
     id 'org.spongepowered.mixin'
-    //id 'org.parchmentmc.librarian.forgegradle'
     id 'maven-publish'
     id "me.modmuss50.mod-publish-plugin" version "0.4.0"
 }
@@ -97,7 +96,6 @@ java {
 
 processResources {
     inputs.property "version", project.mod_version
-
     filesMatching("META-INF/mods.toml") {
         expand "version": project.mod_version
     }
@@ -107,7 +105,6 @@ void processJar(Jar jarTask) {
     jarTask.configure {
         from "LICENSE_FABRIC"
         from "LICENSE_FORGE"
-
         manifest {
             attributes([
                 "Specification-Title"     : "${mod_name}",
@@ -125,12 +122,10 @@ void processJar(Jar jarTask) {
 
 jar {
     archiveClassifier.set('slim')
-    finalizedBy 'reobfJar'
 }
 
 tasks.jarJar {
     archiveClassifier.set("")
-    finalizedBy reobf.maybeCreate('jarJar')
 }
 
 processJar(jar)
@@ -157,17 +152,20 @@ publishMods {
     }
 }
 
+// Example configuration to allow publishing using the maven-publish plugin
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifactId = archivesBaseName
-            fg.component(it)
+        register('mavenJava', MavenPublication) {
+            from components.java
         }
     }
     repositories {
-        mavenLocal()
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
     }
 }
+
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
