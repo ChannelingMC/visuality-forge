@@ -19,10 +19,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -48,7 +48,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
                 particles.put(type, entry.particle);
             }
         }
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, this::spawnParticles);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, this::spawnParticles);
     }
     
     public void spawnParticles(LivingAttackEvent event) {

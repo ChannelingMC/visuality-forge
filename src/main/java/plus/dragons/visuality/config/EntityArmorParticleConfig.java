@@ -22,9 +22,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -49,7 +49,7 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
                 particles.put(armor, entry.particle);
             }
         }
-        MinecraftForge.EVENT_BUS.addListener(this::spawnParticles);
+        NeoForge.EVENT_BUS.addListener(this::spawnParticles);
     }
     
     public void spawnParticles(LivingEvent.LivingTickEvent event) {

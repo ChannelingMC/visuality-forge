@@ -3,7 +3,7 @@ package plus.dragons.visuality.data;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import plus.dragons.visuality.registry.VisualityRegistries;
 
 import java.util.ArrayList;

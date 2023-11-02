@@ -1,7 +1,7 @@
 package plus.dragons.visuality.config;
 
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
 	public static EntityHitParticleConfig ENTITY_HIT_PARTICLES;
@@ -9,17 +9,17 @@ public class Config {
 	public static BlockAmbientParticleConfig BLOCK_AMBIENT_PARTICLES;
 	public static BlockStepParticleConfig BLOCK_STEP_PARTICLES;
 	
-    public static final ForgeConfigSpec.BooleanValue SLIME_ENABLED;
-    public static final ForgeConfigSpec.BooleanValue CHARGE_ENABLED;
+    public static final ModConfigSpec.BooleanValue SLIME_ENABLED;
+    public static final ModConfigSpec.BooleanValue CHARGE_ENABLED;
 
-    public static final ForgeConfigSpec.BooleanValue WATER_CIRCLE_ENABLED;
-    public static final ForgeConfigSpec.BooleanValue WATER_CIRCLE_COLORED;
-    public static final ForgeConfigSpec.IntValue WATER_CIRCLE_DENSITY;
+    public static final ModConfigSpec.BooleanValue WATER_CIRCLE_ENABLED;
+    public static final ModConfigSpec.BooleanValue WATER_CIRCLE_COLORED;
+    public static final ModConfigSpec.IntValue WATER_CIRCLE_DENSITY;
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 	
 	static {
-		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 		
 		builder.push("slime");
 		SLIME_ENABLED = builder

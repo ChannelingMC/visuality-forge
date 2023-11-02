@@ -2,28 +2,25 @@ modLoader="javafml"
 loaderVersion="[20.2,)"
 license="MIT"
 issueTrackerURL="https://github.com/ChannelingMC/visuality-forge/issues/"
-
 [[mods]]
-    modId="visuality"
-    version="${version}"
-    displayName="Visuality: Reforged"
-    #updateJSONURL="https://change.me.example.invalid/updates.json"
-    displayURL="https://www.curseforge.com/minecraft/mc-mods/visuality-forge"
-    logoFile="pack.png"
-    credits="Thanks PinkGoosik for the original work!"
-    authors="LimonBlaze"
-    description="Little visual improvements by adding a bunch of new particles."
-
+modId="visuality"
+version="${version}"
+displayName="Visuality: Reforged"
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/visuality-forge"
+logoFile="pack.png"
+credits="Thanks PinkGoosik for the original work!"
+authors="LimonBlaze"
+description="Little visual improvements by adding a bunch of new particles."
 [[dependencies.visuality]]
-    modId="neoforge"
-    mandatory=true
-    versionRange="[20.2,)"
-    ordering="NONE"
-    side="BOTH"
-
+modId="neoforge"
+mandatory=true
+versionRange="[20.2,)"
+ordering="NONE"
+side="BOTH"
 [[dependencies.visuality]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.20.2,1.21)"
-    ordering="NONE"
-    side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.2,1.21)"
+ordering="NONE"
+side="BOTH"
