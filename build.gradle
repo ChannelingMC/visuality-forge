@@ -87,9 +87,6 @@ tasks.named('build').configure { dependsOn('jarJar') }
 
 mixin {
     config "${mod_id}.mixins.json"
-
-    debug.verbose = true
-    debug.export = true
 }
 
 java {
