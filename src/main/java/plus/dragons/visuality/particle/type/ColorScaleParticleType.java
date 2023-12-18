@@ -6,9 +6,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.Locale;
@@ -97,7 +97,7 @@ public class ColorScaleParticleType extends ParticleType<ColorScaleParticleType.
         @Override
         public String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f",
-                ForgeRegistries.PARTICLE_TYPES.getKey(getType()),
+                BuiltInRegistries.PARTICLE_TYPE.getKey(getType()),
                 r, g, b, scale);
         }
         

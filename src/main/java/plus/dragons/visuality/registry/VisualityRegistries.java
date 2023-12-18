@@ -5,33 +5,19 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.IForgeRegistry;
-import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import plus.dragons.visuality.Visuality;
 
-import java.util.function.Supplier;
-
 public class VisualityRegistries {
-    public static Supplier<IForgeRegistry<ParticleType<?>>> PARTICLE_TYPES;
-    
-    public static class Keys {
-        
-        public static final ResourceKey<Registry<ParticleType<?>>> PARTICLE_TYPES =
-            ResourceKey.createRegistryKey(Visuality.location("particle_type"));
-        
-    }
+    public static final ResourceKey<Registry<ParticleType<?>>> PARTICLE_TYPES_KEY = ResourceKey.createRegistryKey(Visuality.location("particle_type"));
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(PARTICLE_TYPES_KEY, Visuality.ID);
+    public static final Registry<ParticleType<?>> PARTICLE_TYPES_REGISTRY = PARTICLE_TYPES.makeRegistry(builder -> builder.sync(false));
     
     public static class Registers {
-        
-        public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
-            DeferredRegister.create(Keys.PARTICLE_TYPES, Visuality.ID);
-        
         public static void register(IEventBus modBus) {
-            VisualityRegistries.PARTICLE_TYPES = PARTICLE_TYPES.makeRegistry(() ->
-                new RegistryBuilder<ParticleType<?>>().disableSaving().disableSync());
+            VisualityParticles.register();
             PARTICLE_TYPES.register(modBus);
         }
-        
     }
     
 }

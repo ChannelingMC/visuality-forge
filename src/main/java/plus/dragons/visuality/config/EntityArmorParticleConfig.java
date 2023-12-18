@@ -12,6 +12,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -151,7 +151,7 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
     private record Entry(List<Item> armors, ParticleWithVelocity particle) {
     
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            VisualityCodecs.compressedListOf(ForgeRegistries.ITEMS.getCodec()).fieldOf("armor")
+            VisualityCodecs.compressedListOf(BuiltInRegistries.ITEM.byNameCodec()).fieldOf("armor")
                 .forGetter(Entry::armors),
             ParticleWithVelocity.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)

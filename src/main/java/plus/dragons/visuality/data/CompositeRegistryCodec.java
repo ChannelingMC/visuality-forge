@@ -6,12 +6,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.IForgeRegistry;
-import net.neoforged.neoforge.registries.RegistryManager;
 
 /**
- * <p>A {@link Codec} backed by a vanilla {@link Registry} and a custom {@link IForgeRegistry}.
+ * <p>A {@link Codec} backed by a vanilla {@link Registry} and a custom {@link Registry}.
  * <p>Compressed {@link DynamicOps} are only available for vanilla registries,
  * this {@link Codec} should be used with {@link JsonOps#INSTANCE}.
  * @param <A>
@@ -37,10 +36,10 @@ public class CompositeRegistryCodec<A> implements Codec<A> {
         if (result.error().isEmpty() || ops.compressMaps())
             return result;
         if (secondaryCodec == null) {
-            IForgeRegistry<A> registry = RegistryManager.ACTIVE.getRegistry(secondaryKey);
+            Registry<A> registry = (Registry<A>) BuiltInRegistries.REGISTRY.get(secondaryKey.location());
             if (registry == null)
                 return result;
-            secondaryCodec = registry.getCodec();
+            secondaryCodec = registry.byNameCodec();
         }
         return secondaryCodec.decode(ops, input);
     }
@@ -51,10 +50,10 @@ public class CompositeRegistryCodec<A> implements Codec<A> {
         if (result.error().isEmpty() || ops.compressMaps())
             return result;
         if (secondaryCodec == null) {
-            IForgeRegistry<A> registry = RegistryManager.ACTIVE.getRegistry(secondaryKey);
+            Registry<A> registry = (Registry<A>) BuiltInRegistries.REGISTRY.get(secondaryKey.location());
             if (registry == null)
                 return result;
-            secondaryCodec = registry.getCodec();
+            secondaryCodec = registry.byNameCodec();
         }
         return secondaryCodec.encode(input, ops, prefix);
     }

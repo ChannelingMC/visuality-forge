@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -167,7 +167,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
     private record Entry(List<EntityType<?>> entities, ParticleWithVelocity particle) {
     
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            VisualityCodecs.compressedListOf(ForgeRegistries.ENTITY_TYPES.getCodec()).fieldOf("entity")
+            VisualityCodecs.compressedListOf(BuiltInRegistries.ENTITY_TYPE.byNameCodec()).fieldOf("entity")
                 .forGetter(Entry::entities),
             ParticleWithVelocity.CODEC.fieldOf("particle")
                 .forGetter(Entry::particle)

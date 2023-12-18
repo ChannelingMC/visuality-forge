@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -134,7 +134,7 @@ public class BlockAmbientParticleConfig extends ReloadableJsonConfig {
         private static final EnumSet<Direction> ALL_DIRECTIONS = EnumSet.allOf(Direction.class);
     
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            VisualityCodecs.compressedListOf(ForgeRegistries.BLOCKS.getCodec()).fieldOf("block")
+            VisualityCodecs.compressedListOf(BuiltInRegistries.BLOCK.byNameCodec()).fieldOf("block")
                 .forGetter(Entry::blocks),
             Codec.optionalField("direction", VisualityCodecs.compressedSetOf(Direction.CODEC, EnumSet::copyOf))
                 .xmap(optional -> optional.orElse(ALL_DIRECTIONS),

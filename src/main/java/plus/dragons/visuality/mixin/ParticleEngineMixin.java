@@ -7,7 +7,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,12 +26,12 @@ public class ParticleEngineMixin implements VisualityParticleEngine {
     @Shadow @Final private Map<ResourceLocation, ParticleEngine.MutableSpriteSet> spriteSets;
     
     @Override
-    public <O extends ParticleOptions, T extends ParticleType<O>> void registerVisuality(RegistryObject<T> type, ParticleProvider<O> provider) {
+    public <O extends ParticleOptions, T extends ParticleType<O>> void registerVisuality(DeferredHolder<ParticleType<?>,T> type, ParticleProvider<O> provider) {
         this.providers.put(type.getId(), provider);
     }
-    
+
     @Override
-    public <O extends ParticleOptions, T extends ParticleType<O>> void registerVisuality(RegistryObject<T> type, ParticleEngine.SpriteParticleRegistration<O> registration) {
+    public <O extends ParticleOptions, T extends ParticleType<O>> void registerVisuality(DeferredHolder<ParticleType<?>,T> type, ParticleEngine.SpriteParticleRegistration<O> registration) {
         ParticleEngine.MutableSpriteSet spriteSet = new ParticleEngine.MutableSpriteSet();
         this.spriteSets.put(type.getId(), spriteSet);
         this.providers.put(type.getId(), registration.create(spriteSet));
@@ -40,8 +40,8 @@ public class ParticleEngineMixin implements VisualityParticleEngine {
     @Nullable
     @ModifyExpressionValue(method = "makeParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Registry;getKey(Ljava/lang/Object;)Lnet/minecraft/resources/ResourceLocation;"))
     private ResourceLocation visuality$particleAlias(@Nullable ResourceLocation original, @Local(ordinal = 0, argsOnly = true) ParticleOptions options) {
-        if(VisualityRegistries.PARTICLE_TYPES!=null && VisualityRegistries.PARTICLE_TYPES.get()!=null){
-            return original == null ? VisualityRegistries.PARTICLE_TYPES.get().getKey(options.getType()) : original;
+        if(VisualityRegistries.PARTICLE_TYPES_REGISTRY!=null){
+            return original == null ? VisualityRegistries.PARTICLE_TYPES_REGISTRY.getKey(options.getType()) : original;
         }
         return original;
     }

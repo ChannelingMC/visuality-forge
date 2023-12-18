@@ -3,7 +3,7 @@ package plus.dragons.visuality.data;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import plus.dragons.visuality.registry.VisualityRegistries;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public class VisualityCodecs {
     public static final Codec<ParticleType<?>> PARTICLE_TYPE =
-        CompositeRegistryCodec.of(ForgeRegistries.PARTICLE_TYPES.getCodec(), VisualityRegistries.Keys.PARTICLE_TYPES);
+        CompositeRegistryCodec.of(BuiltInRegistries.PARTICLE_TYPE.byNameCodec(), VisualityRegistries.PARTICLE_TYPES_KEY);
     
     public static final Codec<ParticleOptions> PARTICLE_OPTIONS =
         PARTICLE_TYPE.dispatch("type", ParticleOptions::getType, ParticleType::codec);
