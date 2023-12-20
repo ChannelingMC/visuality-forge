@@ -11,10 +11,11 @@ import plus.dragons.visuality.Visuality;
 public class VisualityRegistries {
     public static final ResourceKey<Registry<ParticleType<?>>> PARTICLE_TYPES_KEY = ResourceKey.createRegistryKey(Visuality.location("particle_type"));
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(PARTICLE_TYPES_KEY, Visuality.ID);
-    public static final Registry<ParticleType<?>> PARTICLE_TYPES_REGISTRY = PARTICLE_TYPES.makeRegistry(builder -> builder.sync(false));
+    public static Registry<ParticleType<?>> PARTICLE_TYPES_REGISTRY;
     
     public static class Registers {
         public static void register(IEventBus modBus) {
+            PARTICLE_TYPES_REGISTRY = PARTICLE_TYPES.makeRegistry(builder -> builder.sync(false));
             VisualityParticles.register();
             PARTICLE_TYPES.register(modBus);
         }
