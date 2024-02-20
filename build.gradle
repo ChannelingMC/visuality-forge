@@ -12,6 +12,10 @@ base{
     group = project.maven_group
 }
 
+repositories {
+    mavenLocal()
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -66,7 +70,11 @@ runs {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_version}"
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+mixin {
+    config("visuality.mixins.json")
 }
 
 java {
