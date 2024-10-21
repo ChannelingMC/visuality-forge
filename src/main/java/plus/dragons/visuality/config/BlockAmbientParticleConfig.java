@@ -45,13 +45,11 @@ public class BlockAmbientParticleConfig extends ReloadableJsonConfig {
     
     @SuppressWarnings("deprecation")
     public void spawnParticles(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (!enabled || !level.isAreaLoaded(pos, 1))
+        if (!enabled || !particles.containsKey(state.getBlock()))
             return;
-        Block block = state.getBlock();
-        if (!particles.containsKey(block))
+        if (!level.isAreaLoaded(pos, 1))
             return;
-        
-        var entry = particles.get(block);
+        var entry = particles.get(state.getBlock());
         var directions = entry.getFirst();
         int i = random.nextInt(interval);
         if (i >= directions.length)
