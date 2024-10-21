@@ -23,8 +23,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -49,15 +47,14 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
                 particles.put(armor, entry.particle);
             }
         }
-        NeoForge.EVENT_BUS.addListener(this::spawnParticles);
     }
     
-    public void spawnParticles(EntityTickEvent.Post event) {
+    public void spawnParticles(LivingEntity entity) {
         if (!enabled)
             return;
-        if(!(event.getEntity() instanceof LivingEntity entity)) return;
+
         Level level = entity.level();
-        if(!level.isClientSide || !entity.isAlive())
+        if(!entity.isAlive())
             return;
         
         RandomSource random = entity.getRandom();

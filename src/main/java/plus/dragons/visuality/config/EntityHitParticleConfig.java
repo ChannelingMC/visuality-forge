@@ -20,9 +20,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -48,23 +45,17 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
                 particles.put(type, entry.particle);
             }
         }
-        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, this::spawnParticles);
     }
     
-    public void spawnParticles(LivingDamageEvent.Post event) {
+    public void spawnParticles(LivingEntity entity,DamageSource damageSource, double amount) {
+        // Unfortunately LivingDamageEvent only calls in server side. So we use Mixin
         if (!this.enabled)
-            return;
-        
-        DamageSource damageSource = event.getSource();
-        LivingEntity entity = event.getEntity();
-        if (!entity.level().isClientSide)
             return;
     
         EntityType<?> type = entity.getType();
         if (!particles.containsKey(type))
             return;
-        
-        double amount = 0;
+
         Entity sourceEntity = damageSource.getDirectEntity();
         
         if (sourceEntity == null)
