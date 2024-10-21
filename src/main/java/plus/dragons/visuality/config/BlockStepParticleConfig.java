@@ -111,8 +111,7 @@ public class BlockStepParticleConfig extends ReloadableJsonConfig {
         JsonObject object = new JsonObject();
         object.addProperty("enabled", enabled);
         object.addProperty("interval", interval);
-        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries)
-            .getOrThrow(true, msg -> logger.error("Failed to serialize config entries: {}", msg)));
+        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries).getOrThrow());
         return object;
     }
     

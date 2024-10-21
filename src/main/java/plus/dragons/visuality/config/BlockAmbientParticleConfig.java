@@ -123,8 +123,7 @@ public class BlockAmbientParticleConfig extends ReloadableJsonConfig {
         JsonObject object = new JsonObject();
         object.addProperty("enabled", enabled);
         object.addProperty("interval", interval);
-        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries)
-            .getOrThrow(true, msg -> logger.error("Failed to serialize config entries: {}", msg)));
+        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries).getOrThrow());
         return object;
     }
     
@@ -134,7 +133,7 @@ public class BlockAmbientParticleConfig extends ReloadableJsonConfig {
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             VisualityCodecs.compressedListOf(BuiltInRegistries.BLOCK.byNameCodec()).fieldOf("block")
                 .forGetter(Entry::blocks),
-            Codec.optionalField("direction", VisualityCodecs.compressedSetOf(Direction.CODEC, EnumSet::copyOf))
+            Codec.optionalField("direction", VisualityCodecs.compressedSetOf(Direction.CODEC, EnumSet::copyOf),true)
                 .xmap(optional -> optional.orElse(ALL_DIRECTIONS),
                       set -> set.size() == 6 ? Optional.empty() : Optional.of(set))
                 .forGetter(Entry::directions),

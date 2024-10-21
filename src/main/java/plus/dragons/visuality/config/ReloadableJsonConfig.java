@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,10 +25,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * A Json-based config which can be load from config and resource packs
@@ -43,7 +41,7 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
     private JsonObject config;
     
     protected ReloadableJsonConfig(ResourceLocation id) {
-        this.id = new ResourceLocation(id.getNamespace(), id.getPath() + ".json");
+        this.id = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + ".json");
         this.path = FMLPaths.CONFIGDIR.get().resolve(this.id.getNamespace()).resolve(this.id.getPath());
         this.logger = LoggerFactory.getLogger(this.getClass());
         CONFIGS.put(id, this);
@@ -60,7 +58,7 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
         try {
             for(String namespace : resourceManager.getNamespaces()) {
                 profiler.push(namespace);
-                ResourceLocation id = new ResourceLocation(namespace, this.id.getPath());
+                ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, this.id.getPath());
                 for (Resource resource : resourceManager.getResourceStack(id)) {
                     profiler.push(resource.sourcePackId());
                     try {
@@ -106,10 +104,19 @@ public abstract class ReloadableJsonConfig extends SimplePreparableReloadListene
 
     protected boolean processConditions(JsonObject json, String item, ICondition.IContext context){
         if(json.has(item)){
-            var condition = Util.getOrThrow(ICondition.CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject(item)), JsonParseException::new);
+            var condition = getOrThrow(ICondition.CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject(item)), JsonParseException::new);
             return condition.test(context);
         }
         return false;
+    }
+
+    public static <T, E extends Exception> T getOrThrow(DataResult<T> dataResult, Function<String, E> exThrower) throws E {
+        Optional<DataResult.Error<T>> optional = dataResult.error();
+        if (optional.isPresent()) {
+            throw exThrower.apply((optional.get()).message());
+        } else {
+            return dataResult.result().orElseThrow();
+        }
     }
     
     /**

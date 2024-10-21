@@ -5,7 +5,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 import plus.dragons.visuality.Visuality;
 
 public class VisualityRegistries {

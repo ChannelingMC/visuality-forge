@@ -1,39 +1,43 @@
 package plus.dragons.visuality.particle.type;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
-import net.minecraft.Util;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
+import org.joml.Vector3f;
 
-import java.util.Locale;
 
 public class ColorParticleType extends ParticleType<ColorParticleType.Options> {
-    private final Codec<Options> codec;
-    
+    private final MapCodec<Options> codec;
+    private final StreamCodec<? super RegistryFriendlyByteBuf, Options> streamCodec;
+
     public ColorParticleType(boolean overrideLimiter) {
-        super(overrideLimiter, Deserializer.INSTANCE);
-        this.codec = Codec.FLOAT.listOf()
-            .comapFlatMap(
-                floats -> Util.fixedSize(floats, 3).map(it -> new Options(it.get(0), it.get(1), it.get(2))),
-                options -> ImmutableList.of(options.r, options.g, options.b)
-            );
+        super(overrideLimiter);
+        this.codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ExtraCodecs.VECTOR3F.fieldOf("color")
+                        .forGetter(ColorParticleType.Options::color)
+        ).apply(instance, ColorParticleType.Options::new));
+        this.streamCodec = StreamCodec.ofMember(Options::encode,Options::new);
     }
-    
+
+    @Override
+    public MapCodec<Options> codec() {
+        return codec;
+    }
+
     public ColorParticleType() {
         this(false);
     }
-    
+
     @Override
-    public Codec<Options> codec() {
-        return codec;
+    public StreamCodec<? super RegistryFriendlyByteBuf, Options> streamCodec() {
+        return streamCodec;
     }
-    
+
     public Options withColor(float r, float g, float b) {
         return new Options(r, g, b);
     }
@@ -55,50 +59,30 @@ public class ColorParticleType extends ParticleType<ColorParticleType.Options> {
             this.g = g;
             this.b = b;
         }
+
+        private Options(Vector3f vec) {
+            this(vec.x(), vec.y(), vec.z());
+        }
+
+        private Options(FriendlyByteBuf buffer) {
+            this.r = buffer.readFloat();
+            this.g = buffer.readFloat();
+            this.b = buffer.readFloat();
+        }
     
         @Override
         public ParticleType<?> getType() {
             return ColorParticleType.this;
         }
-        
-        @Override
-        public void writeToNetwork(FriendlyByteBuf buffer) {
+
+        public void encode(FriendlyByteBuf buffer) {
             buffer.writeFloat(r);
             buffer.writeFloat(g);
             buffer.writeFloat(b);
         }
-        
-        @Override
-        public String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(getType()), r, g, b);
+
+        public Vector3f color() {
+            return new Vector3f(r, g, b);
         }
-        
     }
-    
-    @SuppressWarnings("deprecation")
-    public enum Deserializer implements ParticleOptions.Deserializer<Options> {
-        INSTANCE;
-        
-        @Override
-        public Options fromCommand(ParticleType<Options> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            float r = reader.readFloat();
-            reader.expect(' ');
-            float g = reader.readFloat();
-            reader.expect(' ');
-            float b = reader.readFloat();
-            return ((ColorParticleType)type).withColor(r, g, b);
-        }
-        
-        @Override
-        public Options fromNetwork(ParticleType<Options> type, FriendlyByteBuf buffer) {
-            return ((ColorParticleType)type).new Options(
-                buffer.readFloat(),
-                buffer.readFloat(),
-                buffer.readFloat()
-            );
-        }
-        
-    }
-    
 }

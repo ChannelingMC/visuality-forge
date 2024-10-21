@@ -24,7 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -52,11 +52,10 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
         NeoForge.EVENT_BUS.addListener(this::spawnParticles);
     }
     
-    public void spawnParticles(LivingEvent.LivingTickEvent event) {
+    public void spawnParticles(EntityTickEvent.Post event) {
         if (!enabled)
             return;
-        
-        LivingEntity entity = event.getEntity();
+        if(!(event.getEntity() instanceof LivingEntity entity)) return;
         Level level = entity.level();
         if(!level.isClientSide || !entity.isAlive())
             return;
@@ -143,8 +142,7 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
         JsonObject object = new JsonObject();
         object.addProperty("enabled", enabled);
         object.addProperty("interval", interval);
-        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries)
-            .getOrThrow(true, msg -> logger.error("Failed to serialize config entries: {}", msg)));
+        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries).getOrThrow());
         return object;
     }
     

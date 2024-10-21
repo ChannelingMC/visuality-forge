@@ -22,7 +22,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.visuality.Visuality;
 import plus.dragons.visuality.data.ParticleWithVelocity;
@@ -51,7 +51,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, this::spawnParticles);
     }
     
-    public void spawnParticles(LivingAttackEvent event) {
+    public void spawnParticles(LivingDamageEvent.Post event) {
         if (!this.enabled)
             return;
         
@@ -90,22 +90,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
     }
     
     private double getAttackDamage(LivingEntity attacker) {
-        var modifiers = attacker.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
-        double base = 0;
-        if(attacker.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE)){
-            base = attacker.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
-        }
-        double addition = 0;
-        double multiplyBase = 1;
-        double multiplyTotal = 1;
-        for (var modifier : modifiers) {
-            switch (modifier.getOperation()) {
-                case ADDITION -> addition += modifier.getAmount();
-                case MULTIPLY_BASE -> multiplyBase += modifier.getAmount();
-                case MULTIPLY_TOTAL -> multiplyTotal *= (1 + modifier.getAmount());
-            }
-        }
-        return (base + addition) * multiplyBase * multiplyTotal;
+        return attacker.getMainHandItem().getAttributeModifiers().compute(attacker.getAttributeBaseValue(Attributes.ATTACK_DAMAGE),EquipmentSlot.MAINHAND);
     }
     
     @Override
@@ -159,8 +144,7 @@ public class EntityHitParticleConfig extends ReloadableJsonConfig {
         object.addProperty("enabled", enabled);
         object.addProperty("min_amount", minAmount);
         object.addProperty("max_amount", maxAmount);
-        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries)
-            .getOrThrow(true, msg -> logger.error("Failed to serialize config entries: {}", msg)));
+        object.add("entries", Entry.LIST_CODEC.encodeStart(JsonOps.INSTANCE, entries).getOrThrow());
         return object;
     }
     
