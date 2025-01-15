@@ -62,7 +62,7 @@ public class EntityArmorParticleConfig extends ReloadableJsonConfig {
             return;
         
         Minecraft minecraft = Minecraft.getInstance();
-        EntityRenderer<?> renderer = minecraft.getEntityRenderDispatcher().getRenderer(entity);
+        EntityRenderer<?,?> renderer = minecraft.getEntityRenderDispatcher().getRenderer(entity);
         if (!(renderer instanceof RenderLayerParent<?, ?> parent && parent.getModel() instanceof HumanoidModel<?>))
             return;
         

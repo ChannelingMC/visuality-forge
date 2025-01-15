@@ -26,7 +26,7 @@ public class ChargeParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {

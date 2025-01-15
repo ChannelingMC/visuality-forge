@@ -1,27 +1,27 @@
 modLoader="javafml"
-loaderVersion="[4,)"
-license="MIT"
+loaderVersion="${loader_version_range}" #mandatory
+license="${mod_license}"
 issueTrackerURL="https://github.com/DragonsPlusMinecraft/VisualityReforged/issues/"
 [[mods]]
-modId="visuality"
-version="${version}"
-displayName="Visuality: Reforged"
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/visuality-forge"
-logoFile="pack.png"
+logoFile= "../../resources/pack.png"
 credits="Thanks PinkGoosik for the original work!"
-authors="LimonBlaze"
-description="Little visual improvements by adding a bunch of new particles."
-[[dependencies.visuality]]
+authors="${mod_authors}" #optional
+description='''${mod_description}'''
+[[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
-versionRange = "[21.0,)"
+versionRange="${neo_version_range}"
 ordering="NONE"
 side="BOTH"
-[[dependencies.visuality]]
+[[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
-versionRange = "[1.21,)"
+versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
 [[mixins]]

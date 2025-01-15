@@ -4,7 +4,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PowerableMob;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
@@ -25,8 +25,8 @@ public class ParticleEventHandler {
             RandomSource random = living.getRandom();
             if (Config.CHARGE_ENABLED.get() &&
                     random.nextInt(20) == 0 &&
-                    living instanceof PowerableMob powerable &&
-                    powerable.isPowered() &&
+                    living instanceof Creeper creeper &&
+                    creeper.isPowered() &&
                     living.isAlive())
             {
                 AABB aabb = living.getBoundingBox().inflate(0.5);

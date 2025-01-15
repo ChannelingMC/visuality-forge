@@ -54,11 +54,11 @@ public class BlockAmbientParticleConfig extends ReloadableJsonConfig {
         int i = random.nextInt(interval);
         if (i >= directions.length)
             return;
-        boolean fullBlock = state.isSolidRender(level, pos);
+        boolean fullBlock = state.isSolidRender();
         if (fullBlock) {
             Direction direction = directions[i];
             BlockPos facePos = pos.relative(direction);
-            if (level.getBlockState(facePos).isSolidRender(level, facePos))
+            if (level.getBlockState(facePos).isSolidRender())
                 return;
             Direction.Axis axis = direction.getAxis();
             double x = pos.getX() + (axis == Direction.Axis.X ? 0.5 + 0.5625 * direction.getStepX() : random.nextDouble());
