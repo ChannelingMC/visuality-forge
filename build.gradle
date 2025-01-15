@@ -151,7 +151,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 publishMods {
-    file = tasks.jar.archiveFile
+    file = jar.archiveFile
     changelog = new File("changelog/${mod_version}.md").text
     version = mod_version
     type = STABLE
